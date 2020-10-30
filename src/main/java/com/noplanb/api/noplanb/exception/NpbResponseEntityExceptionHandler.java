@@ -28,7 +28,11 @@ public class NpbResponseEntityExceptionHandler extends ResponseEntityExceptionHa
 		return (new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND));
 	}	
 	
-	
+	@ExceptionHandler(AccessDeniedException.class)
+	public final ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+		return (new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND));
+	}	
 	@ExceptionHandler(UserNotFoundException.class)
 	public final ResponseEntity<Object> handleUserNotFoundException(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));

@@ -4,6 +4,8 @@ insert into User (id, username, email, password, created_By, created_Date, last_
 insert into Project (id, title, user_id, created_By,  created_Date, last_Modified_By, last_Modified_Date) values (10001L, 'Inbox', 30001L, 'noPlanB', '2019-09-12', 'noPlanB', '2019-09-12');
 insert into Project (id, title, user_id, created_By, created_Date, last_Modified_By, last_Modified_Date) values (10002L, 'Running', 30002L, 'theodore', '2019-09-12', 'theodore', '2019-09-12');
 insert into Project (id, title, user_id, created_By, created_Date, last_Modified_By, last_Modified_Date) values (10003L, 'Spring JPA', 30001L, 'noPlanB', '2019-09-12', 'noPlanB', '2019-09-12');
+insert into Project (id, title, user_id, completed_Date, created_By, created_Date, last_Modified_By, last_Modified_Date) values (10000L, 'Music', 30002L, '2019-09-30', 'theodore', '2019-09-12', 'theodore', '2019-09-12');
+
 
 insert into Task (id, title, project_id, user_id, due_date, created_By,  created_Date, last_Modified_By, last_Modified_Date) values (20001L, '5km Run',  10002L, 30002L, '2019-09-12', 'theodore', '2019-09-12', 'theodore', '2019-09-12');
 insert into Task (id, title, project_id, user_id, created_By,  created_Date, last_Modified_By, last_Modified_Date) values (20002L, '10km Run', 10002L, 30002L, 'theodore', '2019-09-12',  'theodore', '2019-09-12');

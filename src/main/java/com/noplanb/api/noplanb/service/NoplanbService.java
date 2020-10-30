@@ -45,18 +45,23 @@ public class NoplanbService {
 		return projectOptional.get();
 	}
 	
-	public List<Project> getProjectByTitleAndUsername(String title, String username){
-		List<Project> projects = projectRepository.findByTitleAndUsername(title, username);
+	public List<Project> getAllProjectsByUsernameAndTitle( String username, String title){
+		List<Project> projects = projectRepository.findAllByUsernameAndTitle( username, title);
 		return projects;
 	}
 	
-	public List<Project> getAllProjectsUsername( String username){
+	public List<Project> getOutstandingProjectsByUsernameAndTitle( String username, String title){
+		List<Project> projects = projectRepository.findOutstandingByUsernameAndTitle( username, title);
+		return projects;
+	}
+	
+	public List<Project> getAllProjectsByUsername( String username){
 		List<Project> projects = projectRepository.findAllByUsername(username);
 		return projects;
 	}
 	
-	public List<Project> getAllOutstandingProjectsUsername( String username){
-		List<Project> projects = projectRepository.findOutstandingProjectsByUsername(username);
+	public List<Project> getOutstandingProjectsByUsername( String username){
+		List<Project> projects = projectRepository.findOutstandingByUsername(username);
 		return projects;
 	}
 	
@@ -100,24 +105,24 @@ public class NoplanbService {
 		return taskOptional.get();
 	}
 	
-	public List<Task> findAllTasksByProjectIdAndUsername(Long projectId, String username) {
+	public List<Task> getAllTasksByProjectIdAndUsername(Long projectId, String username) {
 		return taskRepository.findAllTasksByProjectIdAndUsername(projectId, username);
 	}
 	
-	public List<Task> findOutstandingTasksByProjectIdAndUsername(Long projectId, String username) {
+	public List<Task> getOutstandingTasksByProjectIdAndUsername(Long projectId, String username) {
 		return taskRepository.findOutstandingTasksByProjectIdAndUsername(projectId, username);
 
 	}
 	
-	public List<Task> findAllTasksByProjectIdAndUsernameAndTitle(Long projectId, String username, String title) {
+	public List<Task> getAllTasksByProjectIdAndUsernameAndTitle(Long projectId, String username, String title) {
 		return taskRepository.findAllTasksByProjectIdAndUsernameAndTitle(projectId, username, title);
 	}
 		
-	public List<Task>  findOutstandingTasksByProjectIdAndUsernameAndTitle (Long projectId, String username, String title) {
+	public List<Task>  getOutstandingTasksByProjectIdAndUsernameAndTitle (Long projectId, String username, String title) {
 		return taskRepository.findOutstandingTasksByProjectIdAndUsernameAndTitle(projectId, username, title);
 	}
 	
-	public List<Task>  findOutstandingTasksByUsernameBeforeDate(String username, Date beforeDate) {
+	public List<Task>  getOutstandingTasksByUsernameBeforeDate(String username, Date beforeDate) {
 		return taskRepository.findOutstandingTasksByUsernameBeforeDate(username, beforeDate);
 	}
 }

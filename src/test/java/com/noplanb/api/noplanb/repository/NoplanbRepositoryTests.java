@@ -42,8 +42,14 @@ public class NoplanbRepositoryTests {
 	
 
 	@Test
-	public void findProjectByTitleAndUsername() {
-		List<Project> projects = projectRepository.findByTitleAndUsername("run", "theodore");
+	public void findAllProjectsByTitleAndUsername() {
+		List<Project> projects = projectRepository.findAllByUsernameAndTitle( "theodore", "run");
+		assertTrue(!projects.isEmpty());
+	}
+	
+	@Test
+	public void findOutstandingProjectsByTitleAndUsername() {
+		List<Project> projects = projectRepository.findOutstandingByUsernameAndTitle("theodore", "run");
 		assertTrue(!projects.isEmpty());
 	}
 	
@@ -53,7 +59,7 @@ public class NoplanbRepositoryTests {
 	}
 	
 	public void findOutstandingProjectsByUser() {
-		List<Project> projects = projectRepository.findOutstandingProjectsByUsername("theodore");
+		List<Project> projects = projectRepository.findOutstandingByUsername("theodore");
 		assertEquals(2, projects.size());
 	}
 	
