@@ -139,12 +139,12 @@ public class NoplanbRepositoryTests {
 	}
 	
 	@Test
-	public void findOutstandingTasksByUsernameAndTitleBeforeDate() {
+	public void findOutstandingTasksByUsernameAndBeforeDateAndTitle() {
 
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 1);
 		Date beforeDate = cal.getTime();
-		List<Task> tasks = taskRepository.findOutstandingTasksByUsernameAndTitleBeforeDate("theodore", "rUn", beforeDate);
+		List<Task> tasks = taskRepository.findOutstandingTasksByUsernameAndBeforeDateAndTitle("theodore",  beforeDate, "rUn");
 		assertEquals(1, tasks.size());
 	}
 	

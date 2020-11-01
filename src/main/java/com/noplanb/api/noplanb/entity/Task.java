@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -17,7 +19,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Task extends AuditEntity<String> {
 	private String title;
 	private String description;
+	
+	@Temporal(TemporalType.DATE)
 	private Date completedDate;
+	
+	@Temporal(TemporalType.DATE)
 	private Date dueDate;
 	
 	@ManyToOne (fetch=FetchType.LAZY)

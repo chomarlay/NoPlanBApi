@@ -31,6 +31,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 	
 	// username, title, beforeDate  -- for search by tile
 	@Query ("SELECT t from Task t join fetch t.user u WHERE u.username = :username and t.dueDate < :beforeDate and lower(t.title) like lower(concat('%',:title,'%')) and t.completedDate is null")
-	public List<Task> findOutstandingTasksByUsernameAndTitleBeforeDate(@Param("username") String username, @Param("title") String title, @Param("beforeDate") Date beforeDate );
+	public List<Task> findOutstandingTasksByUsernameAndBeforeDateAndTitle(@Param("username") String username, @Param("beforeDate") Date beforeDate, @Param("title") String title );
 	
 }

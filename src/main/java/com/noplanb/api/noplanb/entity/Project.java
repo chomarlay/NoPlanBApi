@@ -1,11 +1,14 @@
 package com.noplanb.api.noplanb.entity;
 
+
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -17,6 +20,8 @@ public class Project extends AuditEntity<String> {
 	
 	private String title;
 	private String description;
+	
+	@Temporal(TemporalType.DATE)
 	private Date completedDate;
 	
 	@ManyToOne (fetch=FetchType.LAZY)
@@ -35,6 +40,7 @@ public class Project extends AuditEntity<String> {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
 	public Date getCompletedDate() {
 		return completedDate;
 	}

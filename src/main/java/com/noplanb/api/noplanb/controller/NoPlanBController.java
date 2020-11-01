@@ -1,5 +1,9 @@
 package com.noplanb.api.noplanb.controller;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,54 +25,36 @@ public class NoPlanBController {
 
 	@GetMapping("/projects")
 	public List<Project> retrieveProjects(	@RequestParam String username,
-											@RequestParam(required=false) boolean all,
-											@RequestParam(required=false) String title ) {
-		List<Project> projects;
-		if (all) {
-			if (title==null) {
-				projects = noPlanBService.getAllProjectsByUsername(username);			
-			} else {
-				projects = noPlanBService.getAllProjectsByUsernameAndTitle(username, title);
-			}
-
-		} else {
-			if (title==null) {
-				projects = noPlanBService.getOutstandingProjectsByUsername(username);	
-			} else {
-				projects = noPlanBService.getOutstandingProjectsByUsernameAndTitle(username, title);
-			}
-		}
-
-		return projects;
+											@RequestParam(required=false) String title,
+											@RequestParam(required=false) boolean all) {
+		return  noPlanBService.getProjects(username, title, all);
 	}
 	
 	@GetMapping("/projects/{id}")
-	public Project retrieveProject(	@PathVariable(name="id") Long id, 
+	public Project retrieveProject(	@PathVariable(name="id") Long projectId, 
 									@RequestParam(name="username") String username) {
-		Project project = noPlanBService.getProjectById(id, username);
-		return project;
+		
+		return noPlanBService.getProjectById(projectId, username);
 	}
 	
 	@GetMapping("/projects/{id}/tasks")
-	public List<Task> retrieveTasks(@PathVariable(name="id") Long id, 
-									@RequestParam String username, 
-									@RequestParam(required=false) boolean all,
-									@RequestParam(required=false) String title) {
-		List<Task> tasks;
-		if (all) {
-			if (title==null) {
-				tasks = noPlanBService.getAllTasksByProjectIdAndUsername(id, username);
-			} else {
-				tasks = noPlanBService.getAllTasksByProjectIdAndUsernameAndTitle(id, username, title);
-			}
-		} else {
-			if (title==null) {
-				tasks = noPlanBService.getOutstandingTasksByProjectIdAndUsername(id, username);
-			} else {
-				tasks = noPlanBService.getOutstandingTasksByProjectIdAndUsernameAndTitle(id, username, title);
-			}
-		}
+	public List<Task> retrieveTasks(@PathVariable(name="id") Long projectId, 
+									@RequestParam String username,
+									@RequestParam(required=false) String title,
+									@RequestParam(required=false) boolean all) {
+		
+		return noPlanBService.getTasksByProjectId(projectId, username, title, all);
 
-		return tasks;
+	}
+	
+	@GetMapping("/tasks")
+	public List<Task> retrieveTasks(	@RequestParam String username,
+											@RequestParam int dueindays,
+											@RequestParam(required=false) String title) {
+		
+		LocalDate localDate = LocalDate.now().plusDays(dueindays+1);
+		Date beforeDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+		return  noPlanBService.getTasksBeforeDate(username,beforeDate,title);
 	}
 }
