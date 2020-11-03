@@ -45,6 +45,12 @@ public class NoplanbService {
 		return projectOptional.get();
 	}
 	
+	public void deleteProjectById(Long projectId, String username) throws ProjectNotFoundException, AccessDeniedException {
+		
+		Project project = getProjectById(projectId, username);
+		projectRepository.delete(project);
+	}
+	
 	public List<Project> getProjects( String username, String title, boolean all) {
 		if (all) {
 			return getAllProjects(username, title);
@@ -97,8 +103,15 @@ public class NoplanbService {
 		return users.get(0);
 	}
 	
+	public Task createTask(Long projectId, Task task, String username) throws ProjectNotFoundException, UserNotFoundException {
+		Project project = getProjectById(projectId, username);
+		User user = getUserByName(username);
+		task.setProject(project);
+		task.setUser(user);
+		return taskRepository.save(task);
+	}
 	
-	public Task getTaskById(Long taskId, String username) throws ProjectNotFoundException, AccessDeniedException {
+	public Task getTaskById(Long taskId, String username) throws TaskNotFoundException, AccessDeniedException {
 		
 		Optional<Task> taskOptional = taskRepository.findById(taskId);
 		
@@ -111,6 +124,12 @@ public class NoplanbService {
 			}
 		}
 		return taskOptional.get();
+	}
+	
+	public void deleteTaskById(Long taskId, String username) throws TaskNotFoundException, AccessDeniedException {
+		
+		Task task = getTaskById(taskId, username);
+		taskRepository.delete(task);
 	}
 	
 	public List<Task> getTasksByProjectId(Long projectId, String username, String title, boolean all) {
