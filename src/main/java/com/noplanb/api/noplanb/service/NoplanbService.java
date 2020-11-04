@@ -1,11 +1,13 @@
 package com.noplanb.api.noplanb.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.noplanb.api.noplanb.entity.Project;
 import com.noplanb.api.noplanb.entity.Task;
@@ -45,9 +47,12 @@ public class NoplanbService {
 		return projectOptional.get();
 	}
 	
+	@Transactional
 	public void deleteProjectById(Long projectId, String username) throws ProjectNotFoundException, AccessDeniedException {
 		
 		Project project = getProjectById(projectId, username);
+		// delete tasks for the project.  Note: Avoiding delete cascade from project entity with one to many relationship
+		taskRepository.deleteAllTasksByProjectId(projectId);
 		projectRepository.delete(project);
 	}
 	
@@ -82,11 +87,6 @@ public class NoplanbService {
 	public Project updateProject( Project project, String username) throws ProjectNotFoundException, AccessDeniedException {
 		getProjectById(project.getId(), username);
 		return projectRepository.save(project);
-	}
-	
-	public void deleteProject( Long projectId, String username) throws ProjectNotFoundException, AccessDeniedException {
-		Project project = getProjectById(projectId, username);
-		projectRepository.delete(project);
 	}
 	
 	public Project createProject(Project project, String username) throws UserNotFoundException {
