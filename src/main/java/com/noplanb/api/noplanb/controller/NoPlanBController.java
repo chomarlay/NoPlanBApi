@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,6 +64,14 @@ public class NoPlanBController {
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(p.getId()).toUri();
 
 		return ResponseEntity.created(location).build();
+	}
+	
+	@PutMapping("/projects")
+	public ResponseEntity<Object> updateProject(@Valid @RequestBody Project project,
+												@RequestParam(name="username") String username) {
+		noPlanBService.updateProject(project, username);
+
+		return ResponseEntity.noContent().build();
 	}
 	
 	
@@ -115,5 +124,13 @@ public class NoPlanBController {
 									@RequestParam(name="username") String username) {
 		
 		noPlanBService.deleteTaskById(taskId, username);
+	}
+	
+	@PutMapping("/tasks")
+	public ResponseEntity<Object> updateTask(@Valid @RequestBody Task task,
+												@RequestParam(name="username") String username) {
+		noPlanBService.updateTask( task, username);
+
+		return ResponseEntity.noContent().build();
 	}
 }

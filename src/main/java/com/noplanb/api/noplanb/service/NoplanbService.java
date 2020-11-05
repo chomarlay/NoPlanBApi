@@ -85,8 +85,12 @@ public class NoplanbService {
 	}
 	
 	public Project updateProject( Project project, String username) throws ProjectNotFoundException, AccessDeniedException {
-		getProjectById(project.getId(), username);
-		return projectRepository.save(project);
+		Project existingProject = getProjectById(project.getId(), username);
+		existingProject.setTitle(project.getTitle());
+		existingProject.setDescription(project.getDescription());
+		existingProject.setCompletedDate(project.getCompletedDate());
+		
+		return projectRepository.save(existingProject);
 	}
 	
 	public Project createProject(Project project, String username) throws UserNotFoundException {
@@ -109,6 +113,16 @@ public class NoplanbService {
 		task.setProject(project);
 		task.setUser(user);
 		return taskRepository.save(task);
+	}
+	
+	public Task updateTask (Task task, String username) throws ProjectNotFoundException, UserNotFoundException {
+		Task existingTask = getTaskById(task.getId(), username);
+		existingTask.setTitle(task.getTitle());
+		existingTask.setDescription(task.getDescription());
+		existingTask.setCompletedDate(task.getCompletedDate());
+		existingTask.setDueDate(task.getDueDate());
+			
+		return taskRepository.save(existingTask);
 	}
 	
 	public Task getTaskById(Long taskId, String username) throws TaskNotFoundException, AccessDeniedException {
