@@ -5,6 +5,8 @@ import java.util.Date;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +18,19 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 @RestController
 public class NpbResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	@ExceptionHandler(AuthenticationException.class)
+	public final ResponseEntity<Object> handleAuthenticationException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+		return (new ResponseEntity(exceptionResponse, HttpStatus.FORBIDDEN));
+	}
+	
+	@ExceptionHandler(UsernameNotFoundException.class)
+	public final ResponseEntity<Object> handleUsernameNotFoundException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() + " ---" , request.getDescription(false));
+		return (new ResponseEntity(exceptionResponse, HttpStatus.FORBIDDEN));
+	}
+	
 	@ExceptionHandler(ProjectNotFoundException.class)
 	public final ResponseEntity<Object> handleProjectNotFoundException(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));

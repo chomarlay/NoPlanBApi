@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.noplanb.api.noplanb.security.service.NpbUserDetailsService;
 
@@ -21,8 +22,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	NpbUserDetailsService userDetailsService;
 	
+    @Autowired
+    private JwtAuthenticationEntryPoint unauthorizedHandler;
+	
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		
 		auth.userDetailsService(userDetailsService);
 	}
 
@@ -32,9 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.authorizeRequests().antMatchers("/signin").permitAll()
 		.antMatchers("/signup").permitAll().
 				anyRequest().authenticated().and().
-				exceptionHandling().and().sessionManagement()
+				exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and().sessionManagement()
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+		httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);	
 	}
 	
     @Bean

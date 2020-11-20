@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.noplanb.api.noplanb.entity.Project;
 import com.noplanb.api.noplanb.entity.Task;
+import com.noplanb.api.noplanb.security.model.UserPrincipal;
 import com.noplanb.api.noplanb.service.NoplanbService;
 
 @RestController
@@ -32,31 +34,31 @@ public class NoPlanBController {
 	NoplanbService noPlanBService;
 	
 
+	private UserPrincipal getUserPrincipal() {
+		return (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+	}
 	@GetMapping("/projects")
-	public List<Project> retrieveProjects(	@RequestParam String username,
-											@RequestParam(required=false) String title,
+	public List<Project> retrieveProjects( @RequestParam(required=false) String title,
 											@RequestParam(required=false) boolean all) {
-		return  noPlanBService.getProjects(username, title, all);
+		return  noPlanBService.getProjects(getUserPrincipal().getUsername(), title, all);
 	}
 	
 	@GetMapping("/projects/{id}")
-	public Project retrieveProject(	@PathVariable(name="id") Long projectId, 
-									@RequestParam(name="username") String username) {
-		
-		return noPlanBService.getProjectById(projectId, username);
+	public Project retrieveProject(	@PathVariable(name="id") Long projectId) {
+		;
+		return noPlanBService.getProjectById(projectId, getUserPrincipal().getUsername());
 	}
 	
 	@DeleteMapping("/projects/{id}")
-	public void deleteProject(	@PathVariable(name="id") Long projectId, 
-									@RequestParam(name="username") String username) {
+	public void deleteProject(	@PathVariable(name="id") Long projectId) {
 		
-		noPlanBService.deleteProjectById(projectId, username);
+		noPlanBService.deleteProjectById(projectId, getUserPrincipal().getUsername());
 	}
 	
 	@PostMapping("/projects")
-	public ResponseEntity<Object> createProject(@Valid @RequestBody Project project,
-												@RequestParam(name="username") String username) {
-		Project p = noPlanBService.createProject(project, username);
+	public ResponseEntity<Object> createProject(@Valid @RequestBody Project project) {
+		Project p = noPlanBService.createProject(project, getUserPrincipal().getUsername());
 		// return reponse with CREATED status and  header with id as a url
 		// /projects/{id}
 		// note: no body returned
@@ -67,30 +69,27 @@ public class NoPlanBController {
 	}
 	
 	@PutMapping("/projects")
-	public ResponseEntity<Object> updateProject(@Valid @RequestBody Project project,
-												@RequestParam(name="username") String username) {
-		noPlanBService.updateProject(project, username);
+	public ResponseEntity<Object> updateProject(@Valid @RequestBody Project project) {
+		noPlanBService.updateProject(project, getUserPrincipal().getUsername());
 
 		return ResponseEntity.noContent().build();
 	}
 	
 	
 	@GetMapping("/projects/{id}/tasks")
-	public List<Task> retrieveTasks(@PathVariable(name="id") Long projectId, 
-									@RequestParam String username,
+	public List<Task> retrieveTasks(@PathVariable(name="id") Long projectId,
 									@RequestParam(required=false) String title,
 									@RequestParam(required=false) boolean all) {
 		
-		return noPlanBService.getTasksByProjectId(projectId, username, title, all);
+		return noPlanBService.getTasksByProjectId(projectId, getUserPrincipal().getUsername(), title, all);
 
 	}
 	
 	@PostMapping("/projects/{id}/tasks")
 	public ResponseEntity<Object> createTask(@PathVariable(name="id") Long projectId,
-									@Valid @RequestBody Task task,
-									@RequestParam String username) {
+									@Valid @RequestBody Task task) {
 		
-		Task t = noPlanBService.createTask(projectId, task, username);
+		Task t = noPlanBService.createTask(projectId, task, getUserPrincipal().getUsername());
 		// return reponse with CREATED status and  header with id as a url
 		// /projects/{id}
 		// note: no body returned
@@ -102,35 +101,30 @@ public class NoPlanBController {
 	}
 	
 	@GetMapping("/tasks")
-	public List<Task> retrieveTasks(	@RequestParam String username,
-											@RequestParam int dueindays,
-											@RequestParam(required=false) String title) {
+	public List<Task> retrieveTasks(@RequestParam int dueindays,
+									@RequestParam(required=false) String title) {
 		
 		LocalDate localDate = LocalDate.now().plusDays(dueindays+1);
 		Date beforeDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-		return  noPlanBService.getTasksBeforeDate(username,beforeDate,title);
+		return  noPlanBService.getTasksBeforeDate(getUserPrincipal().getUsername(),beforeDate,title);
 	}
 	
 	@GetMapping("/tasks/{id}")
-	public Task retrieveTask(	@PathVariable(name="id") Long taskId, 
-									@RequestParam(name="username") String username) {
+	public Task retrieveTask(	@PathVariable(name="id") Long taskId) {
 		
-		return noPlanBService.getTaskById(taskId, username);
+		return noPlanBService.getTaskById(taskId, getUserPrincipal().getUsername());
 	}
 	
 	@DeleteMapping("/tasks/{id}")
-	public void deleteTask(	@PathVariable(name="id") Long taskId, 
-									@RequestParam(name="username") String username) {
+	public void deleteTask(	@PathVariable(name="id") Long taskId) {
 		
-		noPlanBService.deleteTaskById(taskId, username);
+		noPlanBService.deleteTaskById(taskId, getUserPrincipal().getUsername());
 	}
 	
 	@PutMapping("/tasks")
-	public ResponseEntity<Object> updateTask(@Valid @RequestBody Task task,
-												@RequestParam(name="username") String username) {
-		noPlanBService.updateTask( task, username);
-
+	public ResponseEntity<Object> updateTask(@Valid @RequestBody Task task) {
+		noPlanBService.updateTask( task, getUserPrincipal().getUsername());
 		return ResponseEntity.noContent().build();
 	}
 }
