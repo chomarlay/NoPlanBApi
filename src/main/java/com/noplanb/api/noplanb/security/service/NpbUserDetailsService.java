@@ -34,4 +34,5 @@ public class NpbUserDetailsService implements UserDetailsService {
 
         return UserPrincipal.create(user);
     }	
+
 }

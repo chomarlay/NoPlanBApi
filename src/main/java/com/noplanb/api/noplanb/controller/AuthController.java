@@ -1,5 +1,8 @@
 package com.noplanb.api.noplanb.controller;
 
+import java.net.URI;
+import java.util.Collections;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +14,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.noplanb.api.noplanb.entity.User;
 import com.noplanb.api.noplanb.security.JwtTokenProvider;
 import com.noplanb.api.noplanb.security.payload.JwtAuthenticationResponse;
 import com.noplanb.api.noplanb.security.payload.LoginRequest;
 import com.noplanb.api.noplanb.security.payload.SignUpRequest;
-
-
+import com.noplanb.api.noplanb.service.NoplanbService;
 
 @RestController
 public class AuthController {
 	
 	@Autowired
 	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	NoplanbService npbService;
 	
 	@Autowired
 	JwtTokenProvider jwtProvider;
@@ -41,8 +48,27 @@ public class AuthController {
 	}
 	
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser (@Valid @RequestBody SignUpRequest loginRequest){
-		return ResponseEntity.ok("Signed up successfully");
+	public ResponseEntity<?> registerUser (@Valid @RequestBody SignUpRequest signUpRequest){
+        // Creating user's account
+        User user = new User( signUpRequest.getUsername(),
+                signUpRequest.getEmail(), signUpRequest.getPassword());
+
+        
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+//        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+//                .orElseThrow(() -> new RoleNotFoundException("User Role not set."));
+//
+//        user.setRoles(Collections.singleton(userRole));
+
+        User result = npbService.createUser(user);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/user/{username}")
+                .buildAndExpand(result.getUsername()).toUri();
+
+        return ResponseEntity.created(location).body("User registered successfully");
+		
 	}
 
 }

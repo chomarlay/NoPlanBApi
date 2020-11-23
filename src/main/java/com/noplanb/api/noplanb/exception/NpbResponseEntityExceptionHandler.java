@@ -27,8 +27,14 @@ public class NpbResponseEntityExceptionHandler extends ResponseEntityExceptionHa
 	
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public final ResponseEntity<Object> handleUsernameNotFoundException(Exception ex, WebRequest request) {
-		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() + " ---" , request.getDescription(false));
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
 		return (new ResponseEntity(exceptionResponse, HttpStatus.FORBIDDEN));
+	}
+	
+	@ExceptionHandler(SignupException.class)
+	public final ResponseEntity<Object> handleSignupException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage() , request.getDescription(false));
+		return (new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST));
 	}
 	
 	@ExceptionHandler(ProjectNotFoundException.class)
@@ -47,7 +53,8 @@ public class NpbResponseEntityExceptionHandler extends ResponseEntityExceptionHa
 	public final ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 		return (new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND));
-	}	
+	}
+	
 	@ExceptionHandler(UserNotFoundException.class)
 	public final ResponseEntity<Object> handleUserNotFoundException(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));

@@ -14,6 +14,7 @@ import com.noplanb.api.noplanb.entity.Task;
 import com.noplanb.api.noplanb.entity.User;
 import com.noplanb.api.noplanb.exception.AccessDeniedException;
 import com.noplanb.api.noplanb.exception.ProjectNotFoundException;
+import com.noplanb.api.noplanb.exception.SignupException;
 import com.noplanb.api.noplanb.exception.TaskNotFoundException;
 import com.noplanb.api.noplanb.exception.UserNotFoundException;
 import com.noplanb.api.noplanb.repository.ProjectRepository;
@@ -106,6 +107,17 @@ public class NoplanbService {
 		}
 		return users.get(0);
 	}
+	
+	public User createUser(User user) throws SignupException  {
+    	if (userRepository.existsByUsername(user.getUsername())) {
+    		throw new SignupException("User name already exists");
+    	}
+    	if (userRepository.existsByEmail(user.getEmail())) {
+    		throw new SignupException("Email address already exists");
+    	}
+		return userRepository.save(user);
+	}
+	
 	
 	public Task createTask(Long projectId, Task task, String username) throws ProjectNotFoundException, UserNotFoundException {
 		Project project = getProjectById(projectId, username);
