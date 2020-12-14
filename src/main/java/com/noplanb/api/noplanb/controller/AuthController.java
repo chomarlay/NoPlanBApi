@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.noplanb.api.noplanb.entity.Role;
 import com.noplanb.api.noplanb.entity.User;
 import com.noplanb.api.noplanb.security.JwtTokenProvider;
 import com.noplanb.api.noplanb.security.payload.JwtAuthenticationResponse;
@@ -51,15 +52,10 @@ public class AuthController {
 	public ResponseEntity<?> registerUser (@Valid @RequestBody SignUpRequest signUpRequest){
         // Creating user's account
         User user = new User( signUpRequest.getUsername(),
-                signUpRequest.getEmail(), signUpRequest.getPassword());
+                signUpRequest.getEmail(), signUpRequest.getPassword(), Role.ROLE_USER);
 
         
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-//        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-//                .orElseThrow(() -> new RoleNotFoundException("User Role not set."));
-//
-//        user.setRoles(Collections.singleton(userRole));
 
         User result = npbService.createUser(user);
 

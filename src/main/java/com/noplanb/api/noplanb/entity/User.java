@@ -1,7 +1,10 @@
 package com.noplanb.api.noplanb.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
@@ -34,15 +37,20 @@ public class User extends AuditEntity<String> {
     @NotBlank (message = "Password is mandatory")
     @Size(max = 100)
 	private String password;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(length = 60)
+    private Role role;
 
     public User() {
     	
     }
     
-    public User (String username, String email, String password) {
+    public User (String username, String email, String password, Role role) {
     	this.username = username;
     	this.email = email;
     	this.password = password;
+    	this.role = role;
     }
     
     public String getUsername() {
@@ -67,6 +75,14 @@ public class User extends AuditEntity<String> {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	@Override
