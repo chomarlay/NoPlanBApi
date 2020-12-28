@@ -9,6 +9,7 @@ import com.noplanb.api.noplanb.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long>{
 	Optional<User> findByUsername(String username);
+	Optional<User> findByEmail(String email);
 	
 	public List<User> findByUsernameContainsIgnoreCase (String username);
 	public List<User> findByEmailContainsIgnoreCase (String email);

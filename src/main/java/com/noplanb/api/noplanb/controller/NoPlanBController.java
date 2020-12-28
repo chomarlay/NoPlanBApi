@@ -1,9 +1,9 @@
 package com.noplanb.api.noplanb.controller;
 
 import java.net.URI;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import com.noplanb.api.noplanb.entity.Task;
 import com.noplanb.api.noplanb.security.model.UserPrincipal;
 import com.noplanb.api.noplanb.service.NoplanbService;
 
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 public class NoPlanBController {
 

@@ -38,8 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable()
-		.authorizeRequests().antMatchers("/signin").permitAll()
+		httpSecurity.csrf().disable().
+		authorizeRequests().antMatchers("/signin").permitAll()
 		.antMatchers("/signup").permitAll().
 				anyRequest().authenticated().and().
 				exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and().sessionManagement()
