@@ -108,6 +108,14 @@ public class NoplanbService {
 		return users.get(0);
 	}
 	
+	public User getUserById(Long id) throws UserNotFoundException {
+		Optional<User> userOpt = userRepository.findById(id);
+		if (!userOpt.isPresent()) {
+			throw new UserNotFoundException("User Id: " + id + " does not exist.");
+		}
+		return userOpt.get();
+	}
+	
 	public User createUser(User user) throws SignupException  {
     	if (userRepository.existsByUsername(user.getUsername())) {
     		throw new SignupException("User name already exists");

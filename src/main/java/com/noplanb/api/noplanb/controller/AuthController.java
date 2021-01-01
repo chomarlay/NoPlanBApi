@@ -3,6 +3,7 @@ package com.noplanb.api.noplanb.controller;
 import java.net.URI;
 import java.util.Collections;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +13,23 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.noplanb.api.noplanb.entity.Project;
 import com.noplanb.api.noplanb.entity.Role;
 import com.noplanb.api.noplanb.entity.User;
 import com.noplanb.api.noplanb.security.JwtTokenProvider;
+import com.noplanb.api.noplanb.security.model.UserPrincipal;
 import com.noplanb.api.noplanb.security.payload.JwtAuthenticationResponse;
 import com.noplanb.api.noplanb.security.payload.LoginRequest;
 import com.noplanb.api.noplanb.security.payload.SignUpRequest;
 import com.noplanb.api.noplanb.service.NoplanbService;
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class AuthController {
 	
@@ -37,6 +42,10 @@ public class AuthController {
 	@Autowired
 	JwtTokenProvider jwtProvider;
 
+	private UserPrincipal getUserPrincipal() {
+		return (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();	
+	}
+	
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser (@Valid @RequestBody LoginRequest loginRequest){
 		
@@ -66,6 +75,12 @@ public class AuthController {
 
         return ResponseEntity.created(location).body("User registered successfully");
 		
+	}
+	
+	@GetMapping("/auth")
+	public ResponseEntity<?> retrieveUser() {
+		User user =  npbService.getUserById(getUserPrincipal().getId());
+		return ResponseEntity.ok(user);
 	}
 
 }

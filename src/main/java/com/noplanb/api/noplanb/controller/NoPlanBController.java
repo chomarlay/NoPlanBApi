@@ -37,9 +37,9 @@ public class NoPlanBController {
 	
 
 	private UserPrincipal getUserPrincipal() {
-		return (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
+		return (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();	
 	}
+	
 	@GetMapping("/projects")
 	public List<Project> retrieveProjects( @RequestParam(required=false) String title,
 											@RequestParam(required=false) boolean all) {

@@ -12,6 +12,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 
@@ -36,6 +38,7 @@ public class User extends AuditEntity<String> {
     
     @NotBlank (message = "Password is mandatory")
     @Size(max = 100)
+	@JsonIgnore
 	private String password;
     
     @Enumerated(EnumType.STRING)
