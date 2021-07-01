@@ -48,7 +48,7 @@ public class NoPlanBController {
 	
 	@GetMapping("/projects/{id}")
 	public Project retrieveProject(	@PathVariable(name="id") Long projectId) {
-		;
+		
 		return noPlanBService.getProjectById(projectId, getUserPrincipal().getUsername());
 	}
 	

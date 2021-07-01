@@ -1,26 +1,22 @@
 package com.noplanb.api.noplanb.repository;
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import com.noplanb.api.noplanb.entity.Project;
 import com.noplanb.api.noplanb.entity.Task;
 import com.noplanb.api.noplanb.entity.User;
 
 
-@RunWith(SpringRunner.class)
 @DataJpaTest 
 //By default, tests annotated with @DataJpaTest are transactional and roll back at the end of each test
 //see data.sql for data seeding
@@ -36,7 +32,7 @@ public class NoplanbRepositoryTests {
 	
 	@Test
 	public void findProjectById() {
-		Optional<Project> projectOptional = projectRepository.findById(10001L);
+		Optional<Project> projectOptional = projectRepository.findById(10002L);
 		assertTrue(projectOptional.isPresent());
 	}
 	
@@ -135,7 +131,7 @@ public class NoplanbRepositoryTests {
 		cal.add(Calendar.DATE, 1);
 		Date beforeDate = cal.getTime();
 		List<Task> tasks = taskRepository.findOutstandingTasksByUsernameBeforeDate("theodore", beforeDate);
-		assertEquals(1, tasks.size());
+		assertEquals(2, tasks.size());
 	}
 	
 	@Test
@@ -145,7 +141,7 @@ public class NoplanbRepositoryTests {
 		cal.add(Calendar.DATE, 1);
 		Date beforeDate = cal.getTime();
 		List<Task> tasks = taskRepository.findOutstandingTasksByUsernameAndBeforeDateAndTitle("theodore",  beforeDate, "rUn");
-		assertEquals(1, tasks.size());
+		assertEquals(2, tasks.size());
 	}
 	
 	@Test
