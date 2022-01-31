@@ -35,14 +35,19 @@ public class NoPlanBController {
 	@Autowired
 	NoplanbService noPlanBService;
 	
+	@GetMapping("/hello")
+	public String getHello() {
+		return noPlanBService.getHello();
+	}
 
 	private UserPrincipal getUserPrincipal() {
 		return (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();	
 	}
 	
+//	@RequestMapping(value = "/projects", method = RequestMethod.GET)
 	@GetMapping("/projects")
-	public List<Project> retrieveProjects( @RequestParam(required=false) String title,
-											@RequestParam(required=false) boolean all) {
+	public List<Project> retrieveProjects( @RequestParam(required=false, defaultValue="") String title,
+											@RequestParam(required=false, defaultValue="true") boolean all) {
 		return  noPlanBService.getProjects(getUserPrincipal().getUsername(), title, all);
 	}
 	
@@ -50,8 +55,10 @@ public class NoPlanBController {
 	public Project retrieveProject(	@PathVariable(name="id") Long projectId) {
 		
 		return noPlanBService.getProjectById(projectId, getUserPrincipal().getUsername());
+		
 	}
 	
+	//@RequestMapping(value = "/projects/{id}" method = RequestMethod.DELETE)
 	@DeleteMapping("/projects/{id}")
 	public void deleteProject(	@PathVariable(name="id") Long projectId) {
 		
@@ -66,15 +73,25 @@ public class NoPlanBController {
 		// note: no body returned
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(p.getId()).toUri();
-
+		
 		return ResponseEntity.created(location).build();
 	}
 	
+	
+//	@PostMapping("/projects")
+//	public ResponseEntity<Project> createProjectAlternative(@Valid @RequestBody Project project) {
+//		Project p = noPlanBService.createProject(project, getUserPrincipal().getUsername());
+//		// return reponse with ok status and project as body
+//		
+//		return ResponseEntity.ok().body(p);
+//	}
+	
 	@PutMapping("/projects")
-	public ResponseEntity<Object> updateProject(@Valid @RequestBody Project project) {
-		noPlanBService.updateProject(project, getUserPrincipal().getUsername());
+	public ResponseEntity<Project> updateProject(@Valid @RequestBody Project project) {
+		Project updatedProject = noPlanBService.updateProject(project, getUserPrincipal().getUsername());
 
-		return ResponseEntity.noContent().build();
+//		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok(updatedProject);
 	}
 	
 	
@@ -125,8 +142,9 @@ public class NoPlanBController {
 	}
 	
 	@PutMapping("/tasks")
-	public ResponseEntity<Object> updateTask(@Valid @RequestBody Task task) {
-		noPlanBService.updateTask( task, getUserPrincipal().getUsername());
-		return ResponseEntity.noContent().build();
+	public ResponseEntity<Task> updateTask(@Valid @RequestBody Task task) {
+		Task updatedTask = noPlanBService.updateTask( task, getUserPrincipal().getUsername());
+//		return ResponseEntity.noContent().build();
+		return ResponseEntity.ok(updatedTask);
 	}
 }

@@ -18,16 +18,16 @@ import com.noplanb.api.noplanb.exception.ProjectNotFoundException;
 import com.noplanb.api.noplanb.repository.ProjectRepository;
 import com.noplanb.api.noplanb.service.NoplanbService;
 
+// test without spring - junit/mockito on its own
 @ExtendWith(MockitoExtension.class)
-//@WebMvcTest(NoplanbService.class)
+// note: the above replcaces the deprecated JUnit4 @RunWith(MockitoJUnitRunner.class).
+
 public class NoplanbServiceTests {
 	
 	@InjectMocks
-//	@Autowired
 	private NoplanbService noplanbService;
 	
 	@Mock
-//	@MockBean
 	private ProjectRepository projectRepository;
 	
 	@Test
@@ -38,16 +38,15 @@ public class NoplanbServiceTests {
     	user.setUsername("kermit");
     	project.setUser(user);
     	Optional<Project> projectOptional = Optional.of(project);
-        Mockito.when(projectRepository.findById(1L)).thenReturn(projectOptional);
+        Mockito.when(projectRepository.findById(Mockito.anyLong())).thenReturn(projectOptional);
         
 		Project returnProject = noplanbService.getProjectById(1L, "kermit");
-//		Assert.assertEquals("ABC", returnProject.getTitle());
 		assertEquals("ABCd", returnProject.getTitle());
 	}
 	
 	@Test
 	public void invalidProjectTest() {
-		Mockito.when(projectRepository.findById(2L)).thenThrow(ProjectNotFoundException.class);
+		Mockito.when(projectRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 		assertThrows(ProjectNotFoundException.class, ()->noplanbService.getProjectById(2L, "kermit"));
 	}
 

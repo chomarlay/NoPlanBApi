@@ -34,17 +34,14 @@ public class NoplanbService {
 	
 	public Project getProjectById(Long projectId, String username) throws ProjectNotFoundException, AccessDeniedException {
 		
-		Optional<Project> projectOptional = projectRepository.findById(projectId);
-		
-		if (!projectOptional.isPresent()) {
-			throw new ProjectNotFoundException("Project not found");
-		} else {
-			User user = projectOptional.get().getUser();
-			if (user == null || !user.getUsername().equals(username)) {
-				throw new AccessDeniedException(username + " is not allowed to access the project.");
-			}
+		Project project = projectRepository.findById(projectId).orElseThrow(()-> new ProjectNotFoundException("Project not found"));
+			
+		User user = project.getUser();
+		if (user == null || !user.getUsername().equals(username)) {
+			throw new AccessDeniedException(username + " is not allowed to access the project.");
 		}
-		return projectOptional.get();
+
+		return project;
 	}
 	
 	@Transactional
@@ -62,6 +59,10 @@ public class NoplanbService {
 		} else {
 			return getOutstandingProjects(username, title);
 		}
+	}
+	
+	public String getHello() {
+		return "Hello";
 	}
 	
 	private List<Project> getAllProjects( String username, String title){
@@ -108,11 +109,9 @@ public class NoplanbService {
 	}
 	
 	public User getUserById(Long id) throws UserNotFoundException {
-		Optional<User> userOpt = userRepository.findById(id);
-		if (!userOpt.isPresent()) {
-			throw new UserNotFoundException("User Id: " + id + " does not exist.");
-		}
-		return userOpt.get();
+		User user = userRepository.findById(id).orElseThrow(()->new UserNotFoundException("User Id: " + id + " does not exist."));
+
+		return user;
 	}
 	
 	public User createUser(User user) throws SignupException  {
